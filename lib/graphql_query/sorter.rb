@@ -17,7 +17,7 @@ module GraphqlQuery
       @@order_enum.value('DESC', 'Descending order')
     end
 
-    def include_order_arguments(model_name, fields)
+    def include_sort_arguments(model_name, fields)
       graphql_name "#{model_name}SortInput"
 
       sortable_field = Object.const_set("#{model_name}SortInput", Class.new(@@enum_class))

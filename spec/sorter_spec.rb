@@ -25,9 +25,9 @@ RSpec.describe GraphqlQuery::Sorter, type: :module do
     described_class.enum_class = enum_class
   end
 
-  describe '.include_order_arguments' do
+  describe '.include_sort_arguments' do
     let(:wrapper) { sorter_wrapper.new }
-    let(:action) { wrapper.include_order_arguments(model_name, fields) }
+    let(:action) { wrapper.include_sort_arguments(model_name, fields) }
     let(:sortable_field) { class_double(described_class.enum_class) }
 
     before do
