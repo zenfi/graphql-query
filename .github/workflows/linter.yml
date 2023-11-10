@@ -1,0 +1,17 @@
+name: Linter
+
+on: [push]
+
+jobs:
+  lint:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Rubocop Linter
+      uses: andrewmcodes/rubocop-linter-action@v2.7.6
+      with:
+        action_config_path: '.github/config/rubocop_linter_action.yml'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
