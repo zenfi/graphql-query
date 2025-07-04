@@ -1,28 +1,25 @@
 name: Tests
 
-on: [push]
+on: push
 
 jobs:
-  tests:
-
+  test:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v6
+    
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.7.6
-    - name: Install required apt packages
-      run: |
-        sudo apt-get -y install libpq-dev
-    - name: Setup cache key and directory for gems cache
-      uses: actions/cache@v1
-      with:
-        path: vendor/bundle
-        key: ${{ runner.os }}-gem-use-ruby-${{ hashFiles('**/Gemfile.lock') }}
-    - name: Build and test
-      run: |
-        gem install bundler
-        bundle install --jobs 4 --retry 3
-        bundle exec rspec
+        ruby-version: '3.4.2'
+        bundler-cache: true
+    
+    - name: Install dependencies
+      run: bundle install
+    
+    - name: Run tests
+      run: bundle exec rspec
+    
+    - name: Run RuboCop
+      run: bundle exec rubocop

@@ -1,5 +1,6 @@
-require:
+plugins:
   - rubocop-performance
+  - rubocop-rspec
 
 AllCops:
   Exclude:
@@ -12,8 +13,27 @@ AllCops:
     - 'bin/*'
     - 'Gemfile'
     - 'config/environments/*'
-  TargetRubyVersion: 2.7
+  TargetRubyVersion: 3.1
   NewCops: enable
+
+# RSpec configuration
+RSpec/MultipleMemoizedHelpers:
+  Max: 10
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/SpecFilePathFormat:
+  Enabled: false
+
+RSpec/DescribeSymbol:
+  Enabled: false
+
+RSpec/ContextWording:
+  Enabled: false
 
 # Too short methods lead to extraction of single-use methods, which can make
 # the code easier to read (by naming things), but can also clutter the class

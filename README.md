@@ -1,7 +1,7 @@
 # GraphQL Query
 
 ![Tests](https://github.com/zenfi/graphql-query/workflows/Tests/badge.svg)
-![Ruby](https://img.shields.io/badge/ruby-%3E%3D%202.7.6-blue)
+![Ruby](https://img.shields.io/badge/ruby-%3E%3D%203.1-blue)
 ![License](https://img.shields.io/github/license/zenfi/graphql-query?color=blue)
 
 A Ruby gem that converts GraphQL queries into robust ActiveRecord queries with advanced filtering, sorting, and searching capabilities.
@@ -21,13 +21,12 @@ A Ruby gem that converts GraphQL queries into robust ActiveRecord queries with a
 - [Advanced Usage](#advanced-usage)
 - [Performance Considerations](#performance-considerations)
 - [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Installation
 
 **Prerequisites:**
-- Ruby >= 2.7.6
+- Ruby >= 3.1.0
 - Rails with ActiveRecord
 - GraphQL Ruby gem
 
@@ -400,12 +399,6 @@ class AddIndexesToUsers < ActiveRecord::Migration[7.0]
 end
 ```
 
-### Query Optimization
-
-- Use `includes` or `joins` for associated data
-- Consider using `select` to limit returned columns
-- Monitor query execution plans
-
 ### Memory Usage
 
 - Set reasonable connection limits
@@ -477,10 +470,6 @@ bundle exec rspec
 ## License
 
 This gem is available as open source under the terms of the [MIT License](LICENSE).
-
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for version history and changes.
 
 ---
 

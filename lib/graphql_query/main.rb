@@ -8,7 +8,7 @@ module GraphqlQuery
 
     def initialize(relation, args)
       @relation = relation
-      @args = args&.to_h || {}
+      @args = args.to_h
     end
 
     def to_relation
@@ -71,7 +71,7 @@ module GraphqlQuery
     end
 
     def apply_search(results)
-      search_by = (args[:search_by]&.to_h || {}).compact
+      search_by = args[:search_by].to_h.compact
       return results if search_by.empty?
 
       filter = nil

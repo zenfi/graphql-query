@@ -1,5 +1,0 @@
-versions:
-  - rubocop
-  - rubocop-rails
-  - rubocop-performance: 'latest'
-  - rubocop-rspec: 'latest'

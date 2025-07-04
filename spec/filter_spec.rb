@@ -5,6 +5,7 @@ RSpec.describe GraphqlQuery::Filter, type: :module do
   let(:filter_wrapper) do
     Class.new do
       include GraphqlQuery::Filter
+
       def argument(*args); end
     end
   end

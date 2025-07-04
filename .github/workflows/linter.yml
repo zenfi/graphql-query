@@ -1,17 +1,22 @@
 name: Linter
 
-on: [push]
+on: push
 
 jobs:
   lint:
-
     runs-on: ubuntu-latest
-
+    
     steps:
-    - uses: actions/checkout@v2
-    - name: Rubocop Linter
-      uses: andrewmcodes/rubocop-linter-action@v3.3.0
+    - uses: actions/checkout@v6
+    
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
       with:
-        action_config_path: '.github/config/rubocop_linter_action.yml'
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        ruby-version: '3.4.2'
+        bundler-cache: true
+    
+    - name: Install dependencies
+      run: bundle install
+    
+    - name: Run RuboCop
+      run: bundle exec rubocop

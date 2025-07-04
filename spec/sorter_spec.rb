@@ -15,6 +15,7 @@ RSpec.describe GraphqlQuery::Sorter, type: :module do
   let(:sorter_wrapper) do
     Class.new do
       include GraphqlQuery::Sorter
+
       def graphql_name(*args); end
 
       def argument(*args); end

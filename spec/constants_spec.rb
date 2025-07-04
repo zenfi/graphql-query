@@ -7,14 +7,13 @@ shared_examples_for 'a GraphQL filter' do
   let(:apply) { filter[:statement].call(results, key, value) }
 
   before do
-    allow(results).to receive(:where).and_return(results)
-    allow(results).to receive(:not).and_return(results)
+    allow(results).to receive_messages(where: results, not: results)
   end
 
   it 'calls expected statement' do
     apply
     calls.each do |call|
-      expect(results).to have_received(call[:method]).with(*(call[:args]))
+      expect(results).to have_received(call[:method]).with(*call[:args])
     end
   end
 

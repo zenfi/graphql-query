@@ -82,14 +82,16 @@ shared_context 'a model with name' do |name|
   let(name) { double }
 
   before do
-    allow(send(name)).to receive(:name).and_return(name.to_s)
-    allow(send(name)).to receive(:table_name).and_return(name.to_s)
-    allow(send(name)).to receive(:all).and_return(send(name))
-    allow(send(name)).to receive(:where).and_return(send(name))
-    allow(send(name)).to receive(:or).and_return(send(name))
-    allow(send(name)).to receive(:and).and_return(send(name))
-    allow(send(name)).to receive(:not).and_return(send(name))
-    allow(send(name)).to receive(:order).and_return(send(name))
+    allow(send(name)).to receive_messages(
+      name: name.to_s,
+      table_name: name.to_s,
+      all: send(name),
+      where: send(name),
+      or: send(name),
+      and: send(name),
+      not: send(name),
+      order: send(name)
+    )
   end
 end
 
@@ -117,10 +119,11 @@ RSpec.describe GraphqlQuery::Main, type: :module do
   let(:sorter) { { field: 'date', order: 'ASC' } }
   let(:search) { { email: search_value, phone: search_value } }
   let(:args) do
-    filter_by
-      &.merge(pagination)
-      &.merge(sort_by: sorter)
-      &.merge(search_by: search)
+    return nil unless filter_by
+
+    base_args = filter_by.merge(pagination)
+    base_args = base_args.merge(sort_by: sorter)
+    base_args.merge(search_by: search)
   end
   let(:operator) do
     described_class.new(
@@ -130,8 +133,8 @@ RSpec.describe GraphqlQuery::Main, type: :module do
   end
 
   before do
-    filter_by&.each do |_, key_filters|
-      key_filters.each do |filter, _|
+    filter_by&.each_value do |key_filters|
+      key_filters.each_key do |filter|
         allow(GraphqlQuery::Constants::FILTERS[filter][:statement])
           .to receive(:call).and_call_original
       end
@@ -140,10 +143,9 @@ RSpec.describe GraphqlQuery::Main, type: :module do
 
   describe '#to_relation' do
     let(:args) do
-      {}
-        &.merge(filter_by: filter_by)
-        &.merge(sort_by: sorter)
-        &.merge(search_by: search)
+      base_args = { filter_by: filter_by }
+      base_args = base_args.merge(sort_by: sorter)
+      base_args.merge(search_by: search)
     end
 
     before { operator.to_relation }
