@@ -22,4 +22,9 @@ Gem::Specification.new do |spec|
 
   spec.files = Dir['lib/**/*', 'README.md', 'LICENSE']
   spec.require_paths = ['lib']
+
+  # Date filters resolve their day boundaries in the application's time zone,
+  # which is Time.zone — an ActiveSupport concept. Every host already loads it
+  # transitively through ActiveRecord; declare it so the dependency is explicit.
+  spec.add_dependency 'activesupport', '>= 6.0'
 end

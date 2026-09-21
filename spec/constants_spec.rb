@@ -183,4 +183,74 @@ describe 'FILTERS' do
       let(:expected_type) { type }
     end
   end
+
+  # A Date carries no time of day, so comparing it against a timestamp column
+  # resolved to midnight in the database's time zone: `lte: 2026-07-29` cut off
+  # before the 29th had even started locally. The range operators expand a Date
+  # to the edges of its day in the application's time zone instead.
+  describe 'a Date value' do
+    subject(:bound) do
+      filters[operator][:statement].call(results, key, value)
+      captured_args.last
+    end
+
+    let(:results) { double }
+    let(:captured_args) { [] }
+    let(:value) { Date.new(2026, 7, 29) }
+
+    around do |example|
+      original_zone = Time.zone
+      Time.zone = 'America/Mexico_City'
+      example.run
+      Time.zone = original_zone
+    end
+
+    before do
+      allow(results).to receive(:where) do |*args|
+        captured_args.concat(args)
+        results
+      end
+    end
+
+    describe :gte do
+      let(:operator) { :gte }
+
+      it 'opens the range at midnight, local time' do
+        expect(bound.strftime('%F %T %Z')).to eq('2026-07-29 00:00:00 CST')
+      end
+    end
+
+    describe :lte do
+      let(:operator) { :lte }
+
+      it 'closes the range at the end of the day, local time' do
+        expect(bound.strftime('%F %T %Z')).to eq('2026-07-29 23:59:59 CST')
+      end
+    end
+
+    describe :gt do
+      let(:operator) { :gt }
+
+      it 'excludes the whole day, not just its first instant' do
+        expect(bound.strftime('%F %T %Z')).to eq('2026-07-29 23:59:59 CST')
+      end
+    end
+
+    describe :lt do
+      let(:operator) { :lt }
+
+      it 'excludes the whole day, not just its last instant' do
+        expect(bound.strftime('%F %T %Z')).to eq('2026-07-29 00:00:00 CST')
+      end
+    end
+
+    context 'when the value already carries a time' do
+      let(:operator) { :lte }
+      let(:value) { Time.zone.parse('2026-07-29 09:30:00') }
+
+      it 'is left untouched' do
+        expect(bound).to eq(value)
+      end
+    end
+  end
 end
